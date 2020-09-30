@@ -28,9 +28,22 @@ class DocumentModel(db.Model):
         docs = cls.query.filter_by(user_id=user_id).filter_by(doc_name=doc_name).all()
         result = list()
         for doc in docs:
-            my_doc = {"doc_name": doc.doc_name, "content": doc.content}
+            my_doc = {"doc_id": doc.id, "doc_name": doc.doc_name, "content": doc.content}
             result.append(my_doc)
         return result
+
+    @classmethod
+    def find_doc_by_id(cls, username,doc_id):
+        user_id = UserModel.find_user_by_username(username).id
+        doc = cls.query.filter_by(user_id=user_id).filter_by(id=doc_id).first()
+        return doc
+
+    @classmethod
+    def delete_doc(cls, username, doc_name, doc_id):
+        user_id = UserModel.find_user_by_username(username).id
+        doc = cls.query.filter_by(user_id=user_id).filter_by(id=doc_id).first()
+        db.session.delete(doc)
+        db.session.commit()
 
     @classmethod
     def get_all_user_docs(cls, username):
@@ -38,6 +51,6 @@ class DocumentModel(db.Model):
         docs = user.documents
         result = list()
         for doc in docs:
-            my_doc = {"doc_name": doc.doc_name, "content": doc.content}
+            my_doc = {"doc_id": doc.id, "doc_name": doc.doc_name, "content": doc.content}
             result.append(my_doc)
         return result

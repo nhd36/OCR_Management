@@ -20,6 +20,7 @@ class Document(Resource):
                     "documents": docs}, 200
         return {"message": "Document does not exist."}, 404
 
+
     def post(self, username, doc_name):
         self.parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files', required=True, help="No header 'file' found")
         data = self.parser.parse_args()
@@ -39,6 +40,20 @@ class Document(Resource):
         doc.save_to_db()
 
         return {"message": "Document successfully saved to Database!"}, 201
+
+
+    def delete(self, username, doc_name):
+        self.parser.add_argument('doc_id', type=int, required=True, help='Please input document ID')
+        data = self.parser.parse_args()
+        doc_id = data['doc_id']
+        password = data['password']
+        if not UserModel.account_credential(username, password):
+            return {"message": "Invalid account, please try again."}, 401
+        doc = DocumentModel.find_doc_by_id(username, doc_id)
+        if doc:
+            DocumentModel.delete_doc(username, doc_name, doc_id)
+            return {"message": "Successfully delete document!"}
+        return {"message": "Document doesn't exist"}
 
 class Documents(Resource):
     parser = reqparse.RequestParser()
