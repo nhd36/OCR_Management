@@ -55,6 +55,36 @@ class Document(Resource):
             return {"message": "Successfully delete document!"}
         return {"message": "Document doesn't exist"}
 
+    def put(self, username, doc_name):
+        self.parser.add_argument('doc_id', type=int, required=True, help='Please input document ID')
+        self.parser.add_argument('new_name', type=str, required=True, help='Please input new document name')
+        self.parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files', required=True, help="No header 'file' found")
+        data = self.parser.parse_args()
+        doc_id = data['doc_id']
+        file = data['file']
+        password = data['password']
+        new_name = data['new_name']
+        if not UserModel.account_credential(username, password):
+            return {"message": "Invalid account, please try again."}, 401
+        if data['file'].filename == '':
+            return {"message": "No file found. Please input file"}, 400
+        if not allowed_file(file.filename):
+            return {"message": "File type not support. Please input the following type: PNG, JPG, JPEG"}, 400
+
+        image_file = BufferedReader(file)
+        result_scan = scan_OCR(image_file)
+
+        doc = DocumentModel.find_doc_by_id(username, doc_id)
+        if doc:
+            DocumentModel.update_doc_by_id(username, doc_id, result_scan, new_name)
+            return {"message": "Successfully update document!"}
+
+        user_id = UserModel.find_user_by_username(username).id
+        doc = DocumentModel(user_id, doc_name, result_scan)
+        doc.save_to_db()
+        return {"message": "Document successfully saved to Database!"}, 201
+
+
 class Documents(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('password', type=str, required=True, help='Please input your password')

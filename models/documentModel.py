@@ -33,10 +33,17 @@ class DocumentModel(db.Model):
         return result
 
     @classmethod
-    def find_doc_by_id(cls, username,doc_id):
+    def find_doc_by_id(cls, username, doc_id):
         user_id = UserModel.find_user_by_username(username).id
         doc = cls.query.filter_by(user_id=user_id).filter_by(id=doc_id).first()
         return doc
+
+    @classmethod
+    def update_doc_by_id(cls, username, doc_id, content, new_name):
+        doc = cls.find_doc_by_id(username, doc_id)
+        doc.content = content
+        doc.doc_name = new_name
+        db.session.commit()
 
     @classmethod
     def delete_doc(cls, username, doc_name, doc_id):
