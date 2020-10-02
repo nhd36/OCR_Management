@@ -1,33 +1,47 @@
+from flask import request
 from flask_restful import Resource, reqparse
 import werkzeug
 from io import BufferedReader
 from side_methods import scan_OCR, allowed_file
 from models.userModel import UserModel
 from models.documentModel import DocumentModel
+from models.tokenModel import TokenModel
+import jwt
 
 class Document(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('password', type=str, required=True, help='Please input your password')
+    parser.add_argument('doc_id', type=int, help='Document ID must be integer')
+    parser.add_argument('new_name', type=str, help='Document name must be String')
+    parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files')
 
-    def get(self, username, doc_name):
-        data = self.parser.parse_args()
-        password = data["password"]
-        if not UserModel.account_credential(username, password):
-            return {"message": "Invalid account, please try again."}, 401
+    def get(self, doc_name):
+        if "Authorization" not in request.headers:
+            return {"message": "Please included Token Headers"}
+        access_token = request.headers["Authorization"].replace("Bearer", "").strip()
+        if TokenModel.validateTokenInBlackList(access_token):
+            return {"message": "You already logged out. Please log back in"}
+        username = UserModel.decode_user(access_token)
         docs = DocumentModel.find_doc_by_name(username, doc_name)
         if docs:
             return {"message": "success",
+                    "username": username,
                     "documents": docs}, 200
         return {"message": "Document does not exist."}, 404
 
 
-    def post(self, username, doc_name):
+    def post(self, doc_name):
+        if "Authorization" not in request.headers:
+            return {"message": "Please included Token Headers"}
+        access_token = request.headers["Authorization"].replace("Bearer", "").strip()
+        if TokenModel.validateTokenInBlackList(access_token):
+            return {"message": "You already logged out. Please log back in"}
+
+        username = UserModel.decode_user(access_token)
+
         self.parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files', required=True, help="No header 'file' found")
         data = self.parser.parse_args()
         file = data['file']
-        password = data['password']
-        if not UserModel.account_credential(username, password):
-            return {"message": "Invalid account, please try again."}, 401
+
         if data['file'].filename == '':
             return {"message": "No file found. Please input file"}, 400
         if not allowed_file(file.filename):
@@ -42,37 +56,54 @@ class Document(Resource):
         return {"message": "Document successfully saved to Database!"}, 201
 
 
-    def delete(self, username, doc_name):
-        self.parser.add_argument('doc_id', type=int, required=True, help='Please input document ID')
+    def delete(self, doc_name):
+        if "Authorization" not in request.headers:
+            return {"message": "Please included Token Headers"}
+        access_token = request.headers["Authorization"].replace("Bearer", "").strip()
+        if TokenModel.validateTokenInBlackList(access_token):
+            return {"message": "You already logged out. Please log back in"}
+
+        username = UserModel.decode_user(access_token)
+
         data = self.parser.parse_args()
+        if "doc_id" not in data:
+            return {"message": "Please input document ID"}
         doc_id = data['doc_id']
-        password = data['password']
-        if not UserModel.account_credential(username, password):
-            return {"message": "Invalid account, please try again."}, 401
         doc = DocumentModel.find_doc_by_id(username, doc_id)
         if doc:
             DocumentModel.delete_doc(username, doc_name, doc_id)
             return {"message": "Successfully delete document!"}
         return {"message": "Document doesn't exist"}
 
-    def put(self, username, doc_name):
-        self.parser.add_argument('doc_id', type=int, required=True, help='Please input document ID')
-        self.parser.add_argument('new_name', type=str, required=True, help='Please input new document name')
-        self.parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files', required=True, help="No header 'file' found")
+    def put(self, doc_name):
+        if "Authorization" not in request.headers:
+            return {"message": "Please included Token Headers"}
+        access_token = request.headers["Authorization"].replace("Bearer", "").strip()
+        if TokenModel.validateTokenInBlackList(access_token):
+            return {"message": "You already logged out. Please log back in"}
+
+        username = UserModel.decode_user(access_token)
+
         data = self.parser.parse_args()
+        if "doc_id" not in data:
+            return {"message": "Please input document ID"}
+        if "new_name" not in data:
+            return {"message": "Please input new name for the document"}
+
         doc_id = data['doc_id']
         file = data['file']
-        password = data['password']
         new_name = data['new_name']
-        if not UserModel.account_credential(username, password):
-            return {"message": "Invalid account, please try again."}, 401
+
         if data['file'].filename == '':
             return {"message": "No file found. Please input file"}, 400
         if not allowed_file(file.filename):
             return {"message": "File type not support. Please input the following type: PNG, JPG, JPEG"}, 400
 
         image_file = BufferedReader(file)
-        result_scan = scan_OCR(image_file)
+        try:
+            result_scan = scan_OCR(image_file)
+        except:
+            return {"message": "Cannot read input file. Please try another file"}
 
         doc = DocumentModel.find_doc_by_id(username, doc_id)
         if doc:
@@ -87,14 +118,17 @@ class Document(Resource):
 
 class Documents(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('password', type=str, required=True, help='Please input your password')
 
-    def get(self, username):
-        data = self.parser.parse_args()
-        password = data['password']
-        if not UserModel.account_credential(username, password):
-            return {"message": "Invalid account, please try again."}, 401
+    def get(self):
+        if "Authorization" not in request.headers:
+            return {"message": "Please included Token Headers"}
+        access_token = request.headers["Authorization"].replace("Bearer", "").strip()
 
+        if TokenModel.validateTokenInBlackList(access_token):
+            return {"message": "You already logged out. Please log back in"}
+
+        username = UserModel.decode_user(access_token)
         docs = DocumentModel.get_all_user_docs(username)
         return {"message": "success",
+                "username": username,
                 "documents": docs}, 200

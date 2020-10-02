@@ -1,5 +1,6 @@
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
+import jwt
 
 class UserModel(db.Model):
     __tablename__ = 'user'
@@ -8,7 +9,7 @@ class UserModel(db.Model):
     first_name = db.Column(db.String(20))
     last_name = db.Column(db.String(20))
     username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.Text, nullable=False)
     documents = db.relationship('DocumentModel', back_populates='user')
 
     def __init__(self, first_name, last_name, username, password):
@@ -43,6 +44,11 @@ class UserModel(db.Model):
         user = UserModel.find_user_by_username(username)
         if user:
             user_password = user.password
-            if check_password_hash(user_password, password):
-                return True
+            return check_password_hash(user_password, password)
         return False
+
+    @staticmethod
+    def decode_user(jwt_token):
+        decoded_jwt = jwt.decode(jwt_token, 'super-secret', algorithm='HS256')
+        username = decoded_jwt['identity']
+        return username
