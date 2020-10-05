@@ -3,6 +3,7 @@ from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 import secrets
 from flask_jwt_extended import JWTManager
+from side_methods import get_ip
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Database/doc_management.db'
@@ -13,7 +14,7 @@ jwt_manger = JWTManager(app)
 db = SQLAlchemy(app)
 api = Api(app)
 
-def main():
+def main(ip):
     from models.userModel import UserModel
     from models.documentModel import DocumentModel
     from api.userResource import UserRegister, UserLogin, UserLogOut
@@ -27,7 +28,7 @@ def main():
     api.add_resource(Document, "/document/<string:doc_name>")
     api.add_resource(Documents, "/documents")
 
-    app.run(debug=True)
+    app.run(host=ip, port=5000, debug=True)
 
 if __name__ == '__main__':
-    main()
+    main(get_ip())

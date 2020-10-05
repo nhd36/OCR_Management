@@ -29,15 +29,20 @@ class DocumentModel(db.Model):
 
     @classmethod
     def update_doc_by_name(cls, doc_name, content, new_name, username):
+        doc_exist = cls.query.filter_by(doc_name=new_name).first()
+        if new_name != doc_name and doc_exist:
+            return "Matched name with another document, please pick another name", 400
         doc = cls.find_doc_by_name(username, doc_name)
         doc.content = content
         doc.doc_name = new_name
         db.session.commit()
+        return "Successfully update document", 202
 
     @classmethod
     def delete_doc(cls, username, doc_name):
         user_id = UserModel.find_user_by_username(username).id
         doc = cls.query.filter_by(user_id=user_id).filter_by(doc_name=doc_name).first()
+        print(doc)
         db.session.delete(doc)
         db.session.commit()
 

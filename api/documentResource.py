@@ -91,8 +91,8 @@ class Document(Resource):
 
         doc = DocumentModel.find_doc_by_name(username, doc_name)
         if doc:
-            DocumentModel.update_doc_by_name(doc_name, doc_content, new_name, username)
-            return {"message": "Successfully update document!"}
+            message, status_code = DocumentModel.update_doc_by_name(doc_name, doc_content, new_name, username)
+            return {"message": message}, status_code
 
         user_id = UserModel.find_user_by_username(username).id
         doc = DocumentModel(user_id, doc_name, doc_content)
