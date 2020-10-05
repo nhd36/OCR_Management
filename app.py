@@ -28,7 +28,7 @@ def main(ip):
     api.add_resource(Document, "/document/<string:doc_name>")
     api.add_resource(Documents, "/documents")
 
-    app.run(host=ip, port=5000, debug=True)
+    app.run(host=ip, port=5000)
 
 if __name__ == '__main__':
     main(get_ip())
