@@ -4,9 +4,8 @@ from .userModel import UserModel
 class DocumentModel(db.Model):
     __tablename__ = 'documents'
 
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    doc_name = db.Column(db.String(50))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    doc_name = db.Column(db.String(50), primary_key=True)
     content = db.Column(db.Text, nullable=False)
     user = db.relationship('UserModel', back_populates='documents')
 
@@ -25,30 +24,20 @@ class DocumentModel(db.Model):
     @classmethod
     def find_doc_by_name(cls, username, doc_name):
         user_id = UserModel.find_user_by_username(username).id
-        docs = cls.query.filter_by(user_id=user_id).filter_by(doc_name=doc_name).all()
-        result = list()
-        for doc in docs:
-            my_doc = {"doc_id": doc.id, "doc_name": doc.doc_name, "content": doc.content}
-            result.append(my_doc)
-        return result
-
-    @classmethod
-    def find_doc_by_id(cls, username, doc_id):
-        user_id = UserModel.find_user_by_username(username).id
-        doc = cls.query.filter_by(user_id=user_id).filter_by(id=doc_id).first()
+        doc = cls.query.filter_by(user_id=user_id).filter_by(doc_name=doc_name).first()
         return doc
 
     @classmethod
-    def update_doc_by_id(cls, username, doc_id, content, new_name):
-        doc = cls.find_doc_by_id(username, doc_id)
+    def update_doc_by_name(cls, doc_name, content, new_name, username):
+        doc = cls.find_doc_by_name(username, doc_name)
         doc.content = content
         doc.doc_name = new_name
         db.session.commit()
 
     @classmethod
-    def delete_doc(cls, username, doc_name, doc_id):
+    def delete_doc(cls, username, doc_name):
         user_id = UserModel.find_user_by_username(username).id
-        doc = cls.query.filter_by(user_id=user_id).filter_by(id=doc_id).first()
+        doc = cls.query.filter_by(user_id=user_id).filter_by(doc_name=doc_name).first()
         db.session.delete(doc)
         db.session.commit()
 
@@ -58,6 +47,19 @@ class DocumentModel(db.Model):
         docs = user.documents
         result = list()
         for doc in docs:
-            my_doc = {"doc_id": doc.id, "doc_name": doc.doc_name, "content": doc.content}
+            my_doc = {"doc_name": doc.doc_name, "content": doc.content}
             result.append(my_doc)
         return result
+
+    @classmethod
+    def get_docs_by_keyword(cls, keywords, username):
+        doc_contain = list()
+        keywords = [word.strip() for word in keywords.split(",")]
+        docs = DocumentModel.get_all_user_docs(username)
+        for doc in docs:
+            content = doc["content"]
+            for keyword in keywords:
+                if keyword in content:
+                    doc_contain.append(doc)
+                    break
+        return doc_contain
