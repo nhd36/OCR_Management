@@ -1,6 +1,7 @@
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
+from config import JWT_SECRET_KEY
 
 class UserModel(db.Model):
     __tablename__ = 'user'
@@ -49,6 +50,6 @@ class UserModel(db.Model):
 
     @staticmethod
     def decode_user(jwt_token):
-        decoded_jwt = jwt.decode(jwt_token, 'super-secret', algorithm='HS256')
+        decoded_jwt = jwt.decode(jwt_token, JWT_SECRET_KEY, algorithm='HS256')
         username = decoded_jwt['identity']
         return username

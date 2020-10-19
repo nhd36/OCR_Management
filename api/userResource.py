@@ -4,6 +4,11 @@ from models.userModel import UserModel
 from models.tokenModel import TokenModel
 from flask_jwt_extended import create_access_token
 from flask import request
+from config import (MESSAGE_USER_EXIST, MESSAGE_USER_REGISTER_SUCCESS,
+                    MESSAGE_NO_TOKEN_HEADER, MESSAGE_USER_LOGOUT_SUCCESS,
+                    MESSAGE_UNEXPECTED_ERROR, SC_UNEXPECTED_ERR, MESSAGE_LOGGED_OUT,
+                    MESSAGE_TOKEN_EXPIRED,
+                    SC_CREATE, SC_UNAUTHORIZED, SC_SUCCESS, SC_CONFLICT, SC_RESET_CONTENT)
 
 class UserRegister(Resource):
     parser = reqparse.RequestParser()
@@ -21,10 +26,10 @@ class UserRegister(Resource):
         password = data['password']
         existed_user = UserModel.find_user_by_username(username)
         if existed_user:
-            return {"message": "Username has already existed, please try another one."}, 409
+            return MESSAGE_DOC_EXIST, SC_CONFLICT
         user = UserModel(first_name, last_name, username, password)
         user.save_to_db()
-        return {"message": "User registered successfully!"}, 201
+        return MESSAGE_USER_REGISTER_SUCCESS, SC_CREATE
 
 class UserLogin(Resource):
     parser = reqparse.RequestParser()
@@ -37,14 +42,39 @@ class UserLogin(Resource):
         password = data["password"]
         verify = UserModel.account_credential(username, password)
         if not verify:
-            return {"message": "Authorization failed, please try again"}, 401
+            return {"status": 1, "message": "Authorization failed, please try again"}, SC_UNAUTHORIZED
         access_token = create_access_token(identity=username)
-        return {"message": "Login successfully", "access_token": access_token}, 200
+        return {"status": 0, "message": "Login successfully", "access_token": access_token}, SC_SUCCESS
 
 class UserLogOut(Resource):
     def get(self):
         if "Authorization" not in request.headers:
-            return {"message": "Please included Token Headers"}
+            return MESSAGE_NO_TOKEN_HEADER, SC_UNAUTHORIZED
         access_token = request.headers["Authorization"].replace("Bearer", "").strip()
         TokenModel.addTokenToBlackList(access_token)
-        return {"message": "LogOut Successfully"}
+        return MESSAGE_USER_LOGOUT_SUCCESS, SC_SUCCESS
+
+class UserProfile(Resource):
+    def get(self):
+        if "Authorization" not in request.headers:
+            return MESSAGE_NO_TOKEN_HEADER, SC_UNAUTHORIZED
+        access_token = request.headers["Authorization"].replace("Bearer", "").strip()
+        if TokenModel.validateTokenInBlackList(access_token):
+            return MESSAGE_LOGGED_OUT, SC_RESET_CONTENT
+
+        try:
+            username = UserModel.decode_user(access_token)
+        except :
+            return MESSAGE_TOKEN_EXPIRED, SC_UNAUTHORIZED
+
+        user = UserModel.find_user_by_username(username)
+        if user:
+            return {"status": 0,
+                    "message": f"{user.username}'s profile",
+                    "user": {
+                        "id": user.id,
+                        "username": user.username,
+                        "first_name": user.first_name,
+                        "last_name": user.last_name
+                        }}, SC_SUCCESS
+        return MESSAGE_UNEXPECTED_ERROR, SC_UNEXPECTED_ERR
