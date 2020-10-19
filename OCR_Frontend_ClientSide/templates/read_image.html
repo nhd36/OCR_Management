@@ -1,0 +1,41 @@
+{% extends "base_core.html" %}
+{% block content %}
+  <div style="padding:20px 100px;" class="w3-container w3-card w3-white w3-round w3-margin"><br>
+    <form action="{{url_for("read_image")}}" method="post" enctype="multipart/form-data">
+        <h1 style="text-align:center;"><strong> Input Image </strong></h1>
+        <div style="text-align:center;" class="w3-container w3-card w3-white w3-round w3-margin"><br>
+          <div class="input-group mb-3">
+            <label for="myfile"> Upload </label>
+            <input type="file" id="myfile" name="file">
+          </div>
+          <br>
+        </div>
+        <br>
+        <div style="text-align:center;">
+          <input type="submit" value="Update">
+        </div>
+    </form>
+  </div>
+  <br>
+  {% if doc == "None" %}
+  <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+      <h1 style="text-align:center;"><strong> No Document Input </strong></h1>
+      <hr class="w3-clear">
+      <div style="text-align:center; padding: 50px;">
+        <h3> Content Display Here! </h3>
+      </div>
+      <br>
+  </div>
+  {% else %}
+  <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+      <h1 style="text-align:center;"><strong> Document Successfully Scanned!</strong></h1>
+      <hr class="w3-clear">
+      <div style="padding:20px 120px;">
+        <p> {{ doc.doc_content }} </p>
+        <br>
+        <br>
+      </div>
+  </div>
+  <br>
+  {% endif %}
+{% endblock %}

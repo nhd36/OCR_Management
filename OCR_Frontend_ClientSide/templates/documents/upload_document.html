@@ -1,0 +1,26 @@
+{% extends "base_core.html" %}
+{% block content %}
+<div style="padding:60px 120px;" class="w3-container w3-card w3-white w3-round w3-margin"><br>
+  <form action="/upload/document" method="post">
+      <h1 style="text-align:center;"><strong> New Document </strong></h1>
+      <hr class="w3-clear">
+      <div style="padding:20px 120px;">
+        <div>
+          <h6>Doc Name</h6>
+          <input style="width: 100%;" type="text" name="new_name">
+        </div>
+        <br>
+        <div>
+          <h6>Content</h6>
+          <textarea name="update_content" cols="50" rows="10"></textarea>
+        </div>
+        <br>
+        <div style="text-align:center;">
+          <input type="submit" value="Update">
+        </div>
+        <br>
+      </div>
+  </form>
+  <br>
+</div>
+{% endblock %}

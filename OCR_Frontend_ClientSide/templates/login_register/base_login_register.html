@@ -1,0 +1,49 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}
+    </style>
+    {% if title %}
+        <title> OCR Document - {{ title }}</title>
+    {% else %}
+        <title> OCR Document </title>
+    {% endif %}
+
+    {% block script %} {% endblock %}
+</head>
+<body class="w3-theme-l5">
+    <!-- Navbar -->
+    <div class="w3-top">
+    <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
+      <a href="{{ url_for('login')}}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"><i></i>OCR Document Management</a>
+    </div>
+    </div>
+
+    <div class="w3-container w3-content" style="max-width:500px;margin-top:120px;margin-bottom:70px;">
+        <div class="w3-card w3-round w3-white">
+            <div style="padding: 70px 75px;">
+              {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                      <br>
+                        <div class="w3-container w3-card w3-round w3-margin" style="color:red;text-align:center;background:#9EE8DB;">
+                            {{ message }}
+                        </div>
+                        <br>
+                    {% endfor %}
+                {% endif %}
+              {% endwith %}
+              {% block content %} {% endblock %}
+            </div>
+            <br>
+        </div>
+    </div>
+</body>
+</html>

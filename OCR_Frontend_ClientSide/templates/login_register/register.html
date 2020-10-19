@@ -1,0 +1,38 @@
+{% extends "login_register/base_login_register.html" %}
+{% block content %}
+  <form action="{{ url_for('register') }}" method="post">
+    <fieldset style="padding: 20px 50px;">
+      <legend style="text-align:center;"> Improve Management, Improve Your Experience </legend>
+      <div>
+        <h6>First Name</h6>
+        <input type="text" name="first_name">
+      </div>
+      <br>
+      <div>
+        <h6>Last Name</h6>
+        <input type="text" name="last_name">
+      </div>
+      <br>
+      <div>
+        <h6>Username</h6>
+        <input type="text" name="username">
+      </div>
+      <br>
+      <div>
+        <h6>Password</h6>
+        <input type="password" name="password">
+      </div>
+      <br>
+      <div style="text-align:center;">
+          <small>
+            Already have an account? <a href="{{ url_for('login') }}"> Sign In </a>
+          </small>
+      </div>
+      <br>
+      <div style="text-align:center;">
+        <input type="submit" value="Register">
+      </div>
+      <br>
+    </fieldset>
+  </form>
+{% endblock %}

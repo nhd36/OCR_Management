@@ -1,0 +1,24 @@
+{% extends "base_core.html"%}
+{% block content %}
+  {% if doc %}
+    <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+        <h1 style="text-align:center;"><strong> DOCUMENT NAME: {{ doc.doc_name }} </strong></h1>
+        <hr class="w3-clear">
+        <div style="padding:20px 120px;">
+          <p> {{ doc.doc_content }} </p>
+          <br>
+          <br>
+        </div>
+    </div>
+    <br>
+  {% else %}
+    <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+        <h1 style="text-align:center;"><strong> No Document Found </strong></h1>
+        <hr class="w3-clear">
+        <div style="text-align:center; padding: 50px;">
+          <h3> Please make sure you have the right name! </h3>
+        </div>
+        <br>
+    </div>
+  {% endif %}
+{% endblock %}

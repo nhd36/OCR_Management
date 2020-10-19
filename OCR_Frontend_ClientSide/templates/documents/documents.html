@@ -1,0 +1,29 @@
+{% extends "base_core.html" %}
+{% block content %}
+  {% if docs %}
+    {% for doc in docs %}
+      <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+          <h1 style="text-align:center;"><strong> {{ doc.doc_name }} </strong></h1>
+          <hr class="w3-clear">
+          <div style="padding:20px 120px;">
+            <p> {{ doc.content }} </p>
+            <br>
+            <button style="width: 100px;" class="w3-button w3-theme w3-margin-bottom"><a style="text-decoration:none;" href="/delete/document/{{doc.doc_name}}">Delete</a></button>
+            <button style="width: 100px;" class="w3-button w3-theme w3-margin-bottom"><a style="text-decoration:none;" href="/update/document/{{doc.doc_name}}">Update</a></button>
+            <button style="width: 100px;" class="w3-button w3-theme w3-margin-bottom"><a style="text-decoration:none;" href="/document/{{doc.doc_name}}">View</a></button>
+            <br>
+          </div>
+      </div>
+      <br>
+    {% endfor %}
+  {% else %}
+  <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+      <h1 style="text-align:center;"><strong> No Documents Found </strong></h1>
+      <hr class="w3-clear">
+      <div style="text-align:center; padding: 50px;">
+        <h3> Please start uploading your first document! </h3>
+      </div>
+      <br>
+  </div>
+  {% endif %}
+{% endblock %}
