@@ -1,23 +1,14 @@
 base_url = "http://0.0.0.0:8080"
 import requests
 
-token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDMwOTU3MTAsIm5iZiI6MTYwMzA5NTcxMCwianRpIjoiZTZhNDIwYzItNjJjYS00MTUyLTlmNWYtZTUxMjQwZGZlZjU2IiwiZXhwIjoxNjAzMDk2NjEwLCJpZGVudGl0eSI6Im5oZDM2IiwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIn0.6klVBQBtOLGQLKUJLCXx68gGTXXqHGGDl4CH3ppJAPQ"
-def document_api(document_name, token, method, new_name="None", content="None"):
-    url = f"{base_url}/document/{document_name}"
-    if method == "GET":
-        headers = {"Authorization": token}
-        result = requests.get(url, headers=headers).json()
-    elif method == "POST":
-        headers = {"Authorization": token}
-        data = {"content": "Hello"}
-        result = requests.post(url, headers=headers, data=data).json()
-    elif method == "PUT":
-        headers = {"Authorization": token}
-        result = requests.put(url, headers=headers).json()
-    elif method == "DELETE":
-        headers = {"Authorization": token}
-        result = requests.delete(url, headers=headers).json()
+token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDMyNjYxODgsIm5iZiI6MTYwMzI2NjE4OCwianRpIjoiNzQ5ZjVhY2MtMDAyOS00MjIyLWIxNzMtNDVmMWU1ZDQwNmVmIiwiZXhwIjoxNjAzMjY3MDg4LCJpZGVudGl0eSI6Im5oZDM2IiwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIn0.DEuvhkIFQPJ8IJk0feTud6-qjkVXFDfEV1k9BD3Rmhw"
+
+def reader_api(token, image_file):
+    url = f"{base_url}/reader"
+    headers = {"Authorization": token}
+    data = {"file": image_file}
+    result = requests.post(url, headers=headers, data=data).json()
     return result
 
-result = document_api("Nam", token, "POST", "Nam", "Nam")
+result = reader_api(token, "essay.jpg")
 print(result)

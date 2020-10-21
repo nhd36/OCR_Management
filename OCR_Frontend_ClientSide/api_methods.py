@@ -55,7 +55,8 @@ def searchkeywords_api(token, keywords):
 def reader_api(token, image_file):
     url = f"{base_url}/reader"
     headers = {"Authorization": token}
-    result = requests.post(url, headers=headers, data=image_file).json()
+    data = {"file": image_file}
+    result = requests.post(url, headers=headers, data=data).json()
     return result
 
 def validateUser_api(token):

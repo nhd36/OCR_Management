@@ -6,6 +6,7 @@ from api_methods import (login_api, register_api, document_api, documents_api,
                         logout_api, searchkeywords_api, reader_api,
                         validateUser_api)
 from io import BufferedReader
+from side_methods import allowed_file, scan_OCR
 
 app = Flask(__name__)
 jwt_manger = JWTManager(app)
@@ -208,12 +209,18 @@ def read_image():
         return redirect(url_for("login"))
     if request.method == "POST":
         file = request.files["file"]
+        if file is not None:
+            if file.filename == '':
+                return {"status": 1, "message": "No file found. Please input file"}, 400
+        else:
+            return {"status": 1, "message": "No file found. Please input file"}, 400
+
+        if not allowed_file(file.filename):
+            return {"status": 1, "message": "File type not support. Please input the following type: PNG, JPG, JPEG"}, SC_BAD_REQUEST
+
         image_file = BufferedReader(file)
-        result = reader_api(token, image_file)
-        message = result["message"]
-        status = result["status"]
-        if status == 0:
-            doc = "Hello"
+        doc_content = scan_OCR(image_file)
+        message = "Successfully"
         flash(message)
     return render_template("read_image.html", doc=doc)
 
