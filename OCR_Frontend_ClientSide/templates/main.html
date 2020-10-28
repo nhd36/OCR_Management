@@ -1,26 +1,21 @@
 <!--main screen-->
 {% extends "base_core.html" %}
 {% block content %}
-    {% for message in get_flashed_messages() %}
-            <div class="w3-container w3-card w3-white w3-round w3-margin" style="text-align:center;">
-                <span class="w3-opacity" style="color:#FF0000;">{{ message }}</span>
-            </div>
-    {% endfor %}
-    <div class="w3-container w3-card w3-white w3-round w3-margin" style="text-align:center;"><br>
-        <h1 style="padding:60px;"> <strong> WELCOME TO DOCUMENT MANAGEMENT!</strong> </h1>
-        <hr class="w3-clear">
-        <div style="padding:80px 120px; text-align:center;">
-          <h3> We have our best Documents Management Website </h3>
-          <h4> At our site, we can: </h4>
-          <br>
-          <h5> 1. <a href="{{ url_for("read_image") }}"> OCR Read Image </a></h5>
-          <h5> 2. <a href="{{ url_for("show_documents") }}"> View All of Your Documents </a></h5>
-          <h5> 3. <a href="{{ url_for("upload_document") }}"> Upload your own document </a></h5>
-          <h5> 4. <a href="{{ url_for("show_documents") }}"> Adjust your document </a></h5>
-          <h5> 5. <a href="{{ url_for("show_documents") }}"> Delete your document </a></h5>
-          <h5> 6. <a href="{{ url_for("search_keywords")}}"> Search Documents Based on keywords</a></h5>
-          <br>
-          <h4> Please take a quick look at each functionality </h4>
-        </div>
-    </div>
+  <div class="w3-container w3-card w3-white w3-round w3-margin" style="text-align:center;"><br>
+      <h1 style="padding:60px;"> <strong> WELCOME TO DOCUMENT MANAGEMENT!</strong> </h1>
+      <hr class="w3-clear">
+      <div style="padding:80px 120px; text-align:center;">
+        <h3> We have our best Documents Management Website </h3>
+        <h4> At our site, we can: </h4>
+        <br>
+        <h5> 1. <a href="{{ url_for("read_image") }}"> OCR Read Image </a></h5>
+        <h5> 2. <a href="{{ url_for("show_documents") }}"> View All of Your Documents </a></h5>
+        <h5> 3. <a href="{{ url_for("upload_document") }}"> Upload your own document </a></h5>
+        <h5> 4. <a href="{{ url_for("show_documents") }}"> Adjust your document </a></h5>
+        <h5> 5. <a href="{{ url_for("show_documents") }}"> Delete your document </a></h5>
+        <h5> 6. <a href="{{ url_for("search_keywords")}}"> Search Documents Based on keywords</a></h5>
+        <br>
+        <h4> Please take a quick look at each functionality </h4>
+      </div>
+  </div>
 {% endblock content %}

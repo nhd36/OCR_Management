@@ -1,10 +1,14 @@
 import requests
 
-def register_api(first_name, last_name, username, password):
-    url = "http://0.0.0.0:8080/register"
-    data = {"first_name": first_name, "last_name": last_name, "username": username, "password": password}
-    result = requests.post(url, data=data).json()
-    return result
+def scan_OCR(file):
 
-nam = register_api("Nam", "Dao", "nhd37", "inthoi");
-print(nam)
+    url = 'https://demo.computervision.com.vn/backend/api/v1/request/text_photostory/get_scan_a4'
+    response = requests.post(url, auth=(API_KEY, API_SECRET), files={'image':file}).json()
+    print(response.status_code)
+    content = ""
+    # for line in result:
+    #     content += line + " "
+    #
+    return 0, content
+
+scan_OCR()

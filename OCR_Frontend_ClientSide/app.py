@@ -166,6 +166,12 @@ def update_document(doc_name):
     if request.method == "POST":
         new_name = request.form["new_name"]
         content = request.form["update_content"]
+        if new_name == "":
+            flash("Please input name for the document")
+            return redirect(url_for("update_document", doc_name=doc_name))
+        if content == "":
+            flash("Please input content for the document")
+            return redirect(url_for("update_document", doc_name=doc_name))
         result = document_api(doc_name, token, "PUT", content, new_name)
         message = result["message"]
         flash(message)
@@ -189,6 +195,12 @@ def upload_document():
     if request.method == "POST":
         new_name = request.form["new_name"]
         content = request.form["update_content"]
+        if new_name == "":
+            flash("Please input name for the document")
+            return redirect(url_for("upload_document"))
+        if content == "":
+            flash("Please input content for the document")
+            return redirect(url_for("upload_document"))
         result = document_api(new_name, token, "POST", content)
         message = result["message"]
         flash(message)
@@ -208,24 +220,44 @@ def read_image():
         flash(message)
         return redirect(url_for("login"))
     if request.method == "POST":
-        file = request.files["file"]
-        if not file:
-            flash("No file found. Please input file")
-            return redirect(url_for("read_image"))
+        if "form1" in request.form:
+            file = request.files["file"]
+            if not file:
+                flash("No file found. Please input file")
+                return redirect(url_for("read_image"))
 
-        if file.filename == '':
-            flash("No file found. Please input file")
-            return redirect(url_for("read_image"))
+            if file.filename == '':
+                flash("No file found. Please input file")
+                return redirect(url_for("read_image"))
 
-        if not allowed_file(file.filename):
-            flash("File type not support. Please input the following type: PNG, JPG, JPEG")
-            return redirect(url_for("read_image"))
+            if not allowed_file(file.filename):
+                flash("File type not support. Please input the following type: PNG, JPG, JPEG")
+                return redirect(url_for("read_image"))
 
-        image_file = BufferedReader(file)
-        doc_content = scan_OCR(image_file)
-        message = "Successfully Scan"
-        doc = doc_content
-        flash(message)
+            image_file = BufferedReader(file)
+            status, doc_content = scan_OCR(image_file)
+            if status == 1:
+                flash(doc_content)
+                return redirect(url_for("read_image"))
+            doc = doc_content
+            flash("Successfully Scan")
+        elif "form2" in request.form:
+            doc_name = request.form["doc_name"]
+            scanned_content = request.form["scanned_content"]
+            if new_name == "":
+                flash("Please input name for the document")
+                return redirect(url_for("read_image"))
+            if scanned_content == "":
+                flash("Please input content for the document")
+                return redirect(url_for("read_image"))
+            result = document_api(doc_name, token, "POST", scanned_content)
+            status = result["status"]
+            message = result["message"]
+            if status == 1:
+                flash(message)
+                return redirect(url_for("read_image"))
+            flash(message)
+            return redirect(url_for("show_documents"))
     return render_template("read_image.html", doc=doc)
 
 @app.route("/searchKeywords", methods=["GET", "POST"])
@@ -244,6 +276,9 @@ def search_keywords():
     message = "Content Display Here!"
     if request.method == "POST":
         searchKeywords = request.form["keywords"]
+        if searchKeywords == "":
+            flash("Please input some keywords")
+            return redirect(url_for("search_keywords"))
         result = searchkeywords_api(token, searchKeywords)
         status = result["status"]
         message = result["message"]
