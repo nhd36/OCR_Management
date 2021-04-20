@@ -4,7 +4,7 @@ OCR-Management is the Web Application project that allows users to put their doc
 - Backend: Using Flask to create API.
 
 - To run project, needs two available ports on server (Should be 5000 and 8000).
-* Initialize Project:
+Initialize Project:
 
 - UBUNTU:
 ```
@@ -13,7 +13,7 @@ pip3 install virtualenv
 virtualenv venv
 source ven/bin/activate
 ```
-* Backend:
+Backend:
 - Needs available fields for .env file:
 ```
 API_PORT=
@@ -29,7 +29,7 @@ pip3 install -r requirements
 python3 app.py
 ```
 
-* Frontend:
+Frontend:
 - Needs available fields for .env file:
 ```
 APP_PORT=
@@ -47,5 +47,6 @@ pip3 install -r requirements
 python3 app.py
 ```
 
-* Each .env file should be placed in their following directory. For example, .env file for Backend should be putting in OCR_Backend_API directory.
-*** Working on Docker, coming soon.
+Each .env file should be placed in their following directory. For example, .env file for Backend should be putting in OCR_Backend_API directory.
+
+**Working on Docker, coming soon.
