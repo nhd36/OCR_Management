@@ -3,7 +3,8 @@ OCR-Management is the Web Application project that allows users to put their doc
 - Frontend: Using JinJa + Flask, Frontend Library of Python
 - Backend: Using Flask to create API.
 
-- To run project, needs two available ports on server (Should be 5000 and 8000).
+To run project, needs two available ports on server (Should be 5000 and 8000).
+
 Initialize Project:
 
 - UBUNTU:
