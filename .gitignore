@@ -1,0 +1,5 @@
+OCR_Backend_API/__pycache__/
+OCR_Backend_API/.env
+OCR_Frontend_ClientSide/.env
+*/__pycache__
+/venv
