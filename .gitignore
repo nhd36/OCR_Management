@@ -3,3 +3,4 @@ OCR_Backend_API/.env
 OCR_Frontend_ClientSide/.env
 */__pycache__
 /venv
+/.vscode
