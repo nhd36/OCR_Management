@@ -49,4 +49,4 @@ python3 app.py
 
 Each .env file should be placed in their following directory. For example, .env file for Backend should be putting in OCR_Backend_API directory.
 
-**Working on Docker, coming soon.
+**Working on Docker, coming soon**.
