@@ -23,7 +23,7 @@ JWT_SECRET_KEY=
 API_KEY=
 API_SECRET=
 ```
-- To start running Backend port, run following commands:
+- To start running Backend server, run following commands:
 ```
 cd OCR_Backend_API
 pip3 install -r requirements
@@ -41,7 +41,7 @@ JWT_SECRET_KEY=
 API_KEY=
 API_SECRET=
 ```
-- To start running Frontend port, run following commands:
+- To start running Frontend server, run following commands:
 ```
 cd OCR_Frontend_Clientside
 pip3 install -r requirements
@@ -51,3 +51,5 @@ python3 app.py
 Each .env file should be placed in their following directory. For example, .env file for Backend should be putting in OCR_Backend_API directory.
 
 **Working on Docker, coming soon**.
+
+**NOTE: YOU NEED TO HAVE YOUR OWN OCR API TO WORK ON THIS APP. THIS APP ONLY DO BASIC CRUD OPERATIONS AND INTEGRATE WITH THIRD PARTY API.
