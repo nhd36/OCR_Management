@@ -50,6 +50,6 @@ class UserModel(db.Model):
 
     @staticmethod
     def decode_user(jwt_token):
-        decoded_jwt = jwt.decode(jwt_token, JWT_SECRET_KEY, algorithm='HS256')
-        username = decoded_jwt['identity']
+        decoded_jwt = jwt.decode(jwt_token, JWT_SECRET_KEY, algorithms='HS256')
+        username = decoded_jwt['sub']
         return username

@@ -1,6 +1,5 @@
 import jwt
 import requests
-import socket
 from config import API_KEY, API_SECRET, ALLOWED_PROFILE_EXTENSIONS
 
 def scan_OCR(file):

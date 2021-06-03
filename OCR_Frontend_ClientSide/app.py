@@ -75,6 +75,7 @@ def register():
 @app.route("/")
 def main():
     token = request.cookies.get("token")
+    print(validateUser_api(token))
     if token:
         result = validateUser_api(token)
         status = result["status"]

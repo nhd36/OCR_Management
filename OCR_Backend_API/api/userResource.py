@@ -26,7 +26,7 @@ class UserRegister(Resource):
         password = data['password']
         existed_user = UserModel.find_user_by_username(username)
         if existed_user:
-            return MESSAGE_DOC_EXIST, SC_CONFLICT
+            return MESSAGE_USER_EXIST, SC_CONFLICT
         user = UserModel(first_name, last_name, username, password)
         user.save_to_db()
         return MESSAGE_USER_REGISTER_SUCCESS, SC_CREATE
@@ -61,7 +61,6 @@ class UserProfile(Resource):
         access_token = request.headers["Authorization"].replace("Bearer", "").strip()
         if TokenModel.validateTokenInBlackList(access_token):
             return MESSAGE_LOGGED_OUT, SC_RESET_CONTENT
-
         try:
             username = UserModel.decode_user(access_token)
         except :
