@@ -1,10 +1,10 @@
 import requests
 import socket
-from config import API_KEY, API_SECRET, ALLOWED_PROFILE_EXTENSIONS
+from config import API_KEY, API_SECRET, ALLOWED_PROFILE_EXTENSIONS, OCR_API
 
 def scan_OCR(file):
 
-    url = 'https://demo.computervision.com.vn/backend/api/v1/request/text_photostory/get_scan_a4'
+    url = OCR_API
     response = requests.post(url, auth=(API_KEY, API_SECRET), files={'image':file}).json()
     result = response['result']
     content = ""

@@ -8,6 +8,7 @@ ALLOWED_PROFILE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp'}
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 API_PORT = os.getenv("API_PORT")
 IP = os.getenv("IP")
+OCR_API = os.getenv("OCR_API")
 
 API_KEY = os.getenv("API_KEY")
 API_SECRET = os.getenv("API_SECRET")
